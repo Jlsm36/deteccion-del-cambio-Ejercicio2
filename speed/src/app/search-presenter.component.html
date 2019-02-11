@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="card blue">
+  <div class="container">
+      <div>
+        <label>Filtro Estado Lanzamiento</label>
+      </div>
+      <div>
+        <select id="estado"
+                (change)="estadoSelected($event.target.value)">
+                <option></option>
+                <option *ngFor="let launchstatu of launchstatus"
+                      [value]="launchstatu.id">
+                {{launchstatu.description}}
+                </option>
+                </select>
+      </div>
+      <div>
+        <label>Filtro por Tipo Lanzamiento</label>
+      </div>
+      <div>
+        <select id="type" (change)="typeSelected($event.target.value)">
+                <option></option>
+                <option *ngFor="let missiontype of missiontypes"
+                      [value]="missiontype.id"
+                >{{missiontype.name}}
+                </option>
+                </select>
+      </div>
+      <div>
+        <label>Filtro Por Agencia</label>
+      </div>
+      <div>
+        <select  id="agencia" (change)="agenciaSelected($event.target.value)">
+                <option></option>
+                <option *ngFor="let agencia of agencies"
+                      [value]="agencia.abbrev"
+                >{{agencia.name}}
+                </option>
+                </select>
+      </div>
+   </div>
+      </div>
+  </div>

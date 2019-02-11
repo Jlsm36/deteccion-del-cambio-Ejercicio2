@@ -1,0 +1,21 @@
+   <!--Presentador Hijo Busqueda-->
+<app-serarch-presenter
+  (status)="statusFilter($event)"
+  (agencie)="agenciesFilter($event)"
+  (types)="typesFilter($event)"
+  [agencies]="agencies"
+  [launchstatus]="launchstatus"
+  [missiontypes]="missiontypes"
+  >
+
+</app-serarch-presenter>
+
+
+   <!--Presentador Hijo Resultado de la busqueda-->
+
+<app-filter-presenter
+  [filteredLaunches]="filteredLaunches"
+
+>
+
+</app-filter-presenter>

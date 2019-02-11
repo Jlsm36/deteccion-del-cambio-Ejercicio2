@@ -1,0 +1,11 @@
+<div class="container" >
+  <div class="card blue ">
+    <p>Total Lanzamientos encontrados: {{filteredLaunches.length}}</p>
+ </div>
+</div>
+
+<div class="container" *ngFor="let filteredLaunche of filteredLaunches">
+  <div class="card violet ">
+    <p>{{filteredLaunche.name}}</p>
+ </div>
+</div>
