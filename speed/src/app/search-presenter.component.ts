@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ApiService} from "./api.service";
+import {GlobalSlideTypes, StoreService} from "./store.service";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,12 +18,43 @@ export class SearchPresenterComponent implements OnInit {
   @Input() public agencies: any[] = [];
   @Input() public launchstatus: any[] = [];
   @Input() public missiontypes: any[] = [];
+  // public agencies;
+  //  public launchstatus;
+  // public missiontypes: any[] = [];
 
-  constructor(public _api: ApiService) {
-
-  }
+  constructor(public _api: ApiService,
+    ) {}
 
   ngOnInit() {
+    console.log('presenter OnInit');
+
+    // this.global
+    //   .select$(GlobalSlideTypes.statusFilter)
+    //   .subscribe(status => this.launchstatus = status );
+    // this._api.getLaunchstatus();
+
+    // this.launchstatus = this.global.selectSnapShot(GlobalSlideTypes.statusFilter);
+    // // Hago la llamada para recoger los valores
+    // this._api.getAgencies();
+
+    // this._api.getMissiontypes();
+
+    // this.global
+    //   .select$(GlobalSlideTypes.agenciesFilter)
+    //   .subscribe(agencies => this.agencies = agencies );
+    // console.log('AAAAA', this.agencies);
+
+    // this.launchstatus = this.global
+    //     .selectSnapShot(GlobalSlideTypes.statusFilter);
+    // this.global
+    //   .select$(GlobalSlideTypes.statusFilter)
+    //   .subscribe(status => this.launchstatus = status );
+    console.log('AHORA dspues ESTO TIENE',this.launchstatus)
+
+
+    // this.global
+    //   .select$(GlobalSlideTypes.misionTypesFilter)
+    //   .subscribe(missiontypes => this.missiontypes = missiontypes );
   }
 
 

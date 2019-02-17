@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {filter, mergeMap} from 'rxjs/operators';
-// import {ApiService} from "./api.service";
-import * as dataJSON from '../assets/data/launches.json';
+import {Component, OnInit} from '@angular/core';
 import {ApiService} from "./api.service";
+import {GlobalSlideTypes, StoreService} from "./store.service";
 
 @Component({
   selector: 'app-container',
@@ -10,121 +8,88 @@ import {ApiService} from "./api.service";
   styles: []
 })
 export class ContainerComponent implements OnInit {
-  public filteredLaunches: any[] = [];
-  public agencies: any[] = [];
-  public launches: any[] = [];
-  public launchstatus: any[] = [];
-  public missiontypes: any[] = [];
+  public filteredLaunches: any[] = []; // Filtro que viene de lo filtrado
+  public agencies: any[] = []; // Total Agencias
+  public launches: any[] = []; // Total lanzamientos
+  public launchstatus; // Estado de los lanzamientos
+  public missiontypes: any[] = []; // Tipo de lanzamientos
 
   constructor(
-    public _api: ApiService
-  ) {
-    // setInterval(_ => console.log(this.filteredLaunches), 5000)
-  }
+
+    public _api: ApiService,
+    private global: StoreService
+  ) {}
 
   ngOnInit() {
-     this._api.getAgencies()
-      .subscribe(
-      agencies => {
-        this.agencies = agencies;
-      });
+    console.log('container OnInit');
+    this._api.getLaunches();
+    this._api.getLaunchstatus();
+    this._api.getAgencies();
+    this._api.getMissiontypes();
 
-    this._api.getLaunchstatus()
-      .subscribe(
-      launchstatus => {
-        this.launchstatus = launchstatus;
-      });
 
-    this._api.getMissiontypes()
-      .subscribe(
-      missiontypes => {
-        this.missiontypes = missiontypes;
-        });
+    this.global
+      .select$(GlobalSlideTypes.statusFilter)
+      .subscribe(status => this.launchstatus = status );
 
+
+    this.global
+      .select$(GlobalSlideTypes.agenciesFilter)
+      .subscribe(agencies => this.agencies = agencies );
+
+    this.global
+      .select$(GlobalSlideTypes.misionTypesFilter)
+      .subscribe(missiontypes => this.missiontypes = missiontypes );
   }
 
-  // ver () {
-  //   this._api.getLaunches()
-  //     .subscribe(
-  //     launches => {
-  //       this.launches = launches;
-  //       this.filteredLaunches = launches
-  //         // Buscar por tipo (se busca dentro de tipo misiones
-  //         .filter(f => f.missions.find(a =>a.type=== 3));
-  //
-  //         // Busca por estado lanzamientos
-  //         // ok .filter(f=>f.status==2);
-  //
-  //
-  //         // .filter(f => f.rocket.name.includes('Vostok'));
-  //         // .filter(f => f.rocket.name.includes('Vostok'));
-  //       console.log('El Filtro:', this.filteredLaunches);
-  //       console.log('Lanzamientos:', this.launches);
-  //     });
-  //  }
 
    statusFilter(value) {
-    console.log('el tipo es:', typeof  value);
-    this._api.getLaunches()
+        this.global
+      .select$(GlobalSlideTypes.filteredLaunches)
       .subscribe(
       launches => {
         this.launches = launches;
         this.filteredLaunches = launches.filter(f=>f.status==value);
-          // Buscar por tipo (se busca dentro de tipo misiones
-          // .filter(f => f.missions.find(a =>a.type=== 3));
-
-          // Busca por estado lanzamientos
-
-
-
-          // .filter(f => f.rocket.name.includes('Vostok'));
-          // .filter(f => f.rocket.name.includes('Vostok'));
-        console.log('El Filtro:', this.filteredLaunches);
-        console.log('Lanzamientos:', this.launches);
       });
 
    }
    agenciesFilter(value) {
-    this._api.getLaunches()
+    console.log('Agencia trae', value);
+    // this._api.getLaunches();
+     this.global
+      .select$(GlobalSlideTypes.filteredLaunches)
       .subscribe(
       launches => {
         this.launches = launches;
-        this.filteredLaunches = launches.filter(f=>f.status==value);
-          // Buscar por tipo (se busca dentro de tipo misiones
-          // .filter(f => f.missions.find(a =>a.type=== 3));
-
-          // Busca por estado lanzamientos
+        console.log(this.launches);
 
 
+        let rocket = this.launches
+          .map((res: any) => res.rocket);
+        console.log('LAS rockets SON',rocket);
 
-          // .filter(f => f.rocket.name.includes('Vostok'));
-          // .filter(f => f.rocket.name.includes('Vostok'));
-        console.log('El Filtro:', this.filteredLaunches);
-        console.log('Lanzamientos:', this.launches);
+        let agencies = rocket.map((res: any) => res.agencies);
+        console.log('LAS AGENCIAS SON',agencies);
+
+        let abbrev = agencies.filter(filtro => filtro.agencies.find(a =>a.id=== 96));
+        console.log('LAS abbrev SON',abbrev);
+
+
+        this.filteredLaunches = rocket
+          .filter(filtro => filtro.agencies.find(a =>a.id=== 96));
+        console.log('NOS TRAE POR FIN',this.filteredLaunches)
       });
 
    }
    typesFilter(value) {
-    // En este caso filteredLaunches lo cambiamos de estado
-     // Por tal motivo no hace falta poner:
-     // this.filteredLaunches = {...this.filteredLaunches}
     value = parseInt(value);
-    this._api.getLaunches()
+    this.global
+      .select$(GlobalSlideTypes.filteredLaunches)
       .subscribe(
       launches => {
-        this.filteredLaunches = launches.filter(f => f.missions.find(a =>a.type=== value));
+        this.filteredLaunches = launches
+          .filter(f => f.missions.find(a =>a.type=== value));
       });
    }
-
-
-    // );
-    // console.log(this.filteredLaunches);
-    // this.filteredLaunches = this._api.getLaunches.filter(
-    //   l =>
-    //     l.name.toLowerCase().includes(search) ||
-    //     l.location.name.toLowerCase().includes(search)
-    // )
-
-
 
 }
